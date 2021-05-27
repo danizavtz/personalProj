@@ -3,7 +3,7 @@ const app = require('../app');
 
 try {
     app.listen(process.env.PORT);
-    console.log(`Microsservice listening at http://localhost:${process.env.PORT}`, process.env.PORT);
+    console.log(`Microsservice listening at http://localhost:${process.env.PORT}`);
 } catch (e) {
     throw e
 }
