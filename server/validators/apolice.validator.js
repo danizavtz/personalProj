@@ -2,7 +2,7 @@ const { param, validationResult } = require('express-validator');
 
 exports.validationParamsRules = [
     param('id', 'id is required').exists(),
-    param('id', 'id is required').notEmpty()
+    param('id', 'id is required').notEmpty().isAlphanumeric()
 ];
 
 exports.checkRules = (req, res, next) => {
