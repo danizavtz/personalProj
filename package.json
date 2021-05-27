@@ -4,7 +4,13 @@
   "description": "nodejs axios",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon ./bin/www",
+    "start": "node ./bin/www",
+    "lint": "./node_modules/.bin/eslint ./server/**/*.js",
+    "test": "mocha --reporter spec test/ --exit",
+    "coverage": "nyc mocha --exit --reporter progress ./test/",
+    "coverage:report": "nyc report --reporter=lcov --reporter=text",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov"
   },
   "repository": {
     "type": "git",
@@ -19,5 +25,20 @@
   "bugs": {
     "url": "https://github.com/danizavtz/personalProj/issues"
   },
-  "homepage": "https://github.com/danizavtz/personalProj#readme"
+  "homepage": "https://github.com/danizavtz/personalProj#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "eslint": "^7.27.0",
+    "mocha": "^8.4.0",
+    "nodemon": "^2.0.7",
+    "nyc": "^15.1.0",
+    "supertest": "^6.1.3"
+  }
 }
