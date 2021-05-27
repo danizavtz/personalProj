@@ -1,0 +1,23 @@
+{
+  "name": "personalproj",
+  "version": "1.0.0",
+  "description": "nodejs axios",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danizavtz/personalProj.git"
+  },
+  "keywords": [
+    "nodejs",
+    "axios"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danizavtz/personalProj/issues"
+  },
+  "homepage": "https://github.com/danizavtz/personalProj#readme"
+}
