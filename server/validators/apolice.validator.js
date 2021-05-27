@@ -1,8 +1,8 @@
-const { params, validationResult } = require('express-validator');
+const { param, validationResult } = require('express-validator');
 
 exports.validationParamsRules = [
-    params('id', 'id is required').exists(),
-    params('id', 'id is required').notEmpty()
+    param('id', 'id is required').exists(),
+    param('id', 'id is required').notEmpty()
 ];
 
 exports.checkRules = (req, res, next) => {
