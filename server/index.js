@@ -1,5 +1,7 @@
 const router = require('express').Router();
 
+router.use(require('routes/apolice.route'))
+
 router.get('/', (req, res) => {
     req.servermsg = {msg: "server up and running"}
     res.status(200).json(req.servermsg);
