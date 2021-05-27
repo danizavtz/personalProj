@@ -1,5 +1,11 @@
 const axios = require('axios');
-const tokenURLPrefix = ''
+
+const body_data_for_authorize_request = {
+    "clientId": process.env.CLIENT_ID,
+    "clientSecret": process.env.CLIENT_SECRET,
+    "grantType": process.env.G_TYPE
+}
+
 const APIendpointInstance = axios.create({
     baseURL: process.env.CORPORATE_URL_ENDPOINT,
     timeout: parseInt(process.env.TIMEOUT),
@@ -12,33 +18,61 @@ const APIendpointInstance = axios.create({
     },
     params: {
         key: process.env.API_KEY
-      }
+    }
 });
 
 exports.generateCode = async (req, res, next) => {
-    body_data = {
-            "clientId":  process.env.CLIENT_ID,
-            "clientSecret": process.env.CLIENT_SECRET,
-            "grantType": process.env.G_TYPE
-    }
     try {
-        const apicode = await APIendpointInstance.post('corporate/security/v1/authorize',body_data)
-        console.log(apicode)
-        req.apicode = apicode.data
+        const apicode = await APIendpointInstance.post(process.env.CORPORATE_AUTHORIZE, body_data_for_authorize_request)
+        req.apicode = apicode.data.code
         next()
-    } catch (e) {
-        console.log(e)
-        res.status(500).json({errors: [{ location: 'apolice', msg: 'There was an error on request for code token generation.', param: 'apolice' }]})
+    } catch (error) {
+        if (error.response) {
+            const { code, message } = error.response.data
+            res.status(error.response.status).json({ errors: [{ location: 'apolice', msg: `There was an error on request for code generation. Code: ${code}. Message: ${message}`, param: 'response error' }] })
+        } else if (error.request) {
+            res.status(500).json({ errors: [{ location: 'apolice', msg: 'There was an error on request for code generation.', param: 'request error' }] })
+        } else {
+            res.status(500).json({ errors: [{ location: 'apolice', msg: 'There was an error on request for code generation.', param: 'request error' }] })
+        }
     }
 }
 
-exports.generateToken = (req, res, next) => {
-
+exports.generateToken = async (req, res, next) => {
+    const body_data_for_token_request = { "code": req.apicode }
+    try {
+        const tkn = await APIendpointInstance.post(process.env.CORPORATE_TOKEN, body_data_for_token_request)
+        req.apicredential = tkn.data
+        next()
+    } catch (error) {
+        if (error.response) {
+            const { code, message } = error.response.data
+            res.status(error.response.status).json({ errors: [{ location: 'apolice', msg: `There was an error on request for token generation.Code: ${code}. Message: ${message}`, param: 'response error' }] })
+        } else if (error.request) {
+            res.status(500).json({ errors: [{ location: 'apolice', msg: 'There was an error on request for token generation.', param: 'request error' }] })
+        } else {
+            res.status(500).json({ errors: [{ location: 'apolice', msg: 'There was an error on request for token generation.', param: 'apolice' }] })
+        }
+    }
 }
 
-
-
-exports.generateURL = (req, res) => {
-    res.status(200).json(req.apicode)
-
+exports.generateURL = async (req, res) => {
+    try {
+        APIendpointInstance.interceptors.request.use((config) => {
+            config.headers = config.headers || {};
+            config.headers.Authorization = `Bearer ${req.apicredential.token}`
+            return config;
+        });
+        const corporate_response = await APIendpointInstance.get(`insurance/claim/v1/claims/${req.params.id}/selfInspection`)
+        res.status(200).json(corporate_response.data)
+    } catch (error) {
+        if (error.response) {
+            const { code, message } = error.response.data
+            res.status(error.response.status).json({ errors: [{ location: 'generateURL', msg: `There was an error on request for URL generation. Code: ${code}. Message: ${message}`, param: req.params.id }] })
+        } else if (error.request) {
+            res.status(500).json({ errors: [{ location: 'generateURL', msg: 'There was an error on request for URL generation.', param: req.params.id }] })
+        } else {
+            res.status(500).json({ errors: [{ location: 'generateURL', msg: 'There was an error on request for URL generation.', param: req.params.id }] })
+        }
+    }
 }
