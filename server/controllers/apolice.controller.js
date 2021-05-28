@@ -135,7 +135,7 @@ exports.generateURL = async (req, res) => {
                 config.headers.Authorization = `Bearer ${req.apicredential.token}`
                 return config;
             });
-            corporate_response = await APIendpointInstanceDev.get(`insurance/claim/v1/claims/${req.params.id}/selfInspection`)
+            corporate_response = await APIendpointInstance.get(`insurance/claim/v1/claims/${req.params.id}/selfInspection`)
         }
         res.status(200).json(corporate_response.data)
     } catch (error) {
