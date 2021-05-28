@@ -46,5 +46,14 @@ describe('#Login', () => {
                     done();
                 });
         });
+        it('Check docs home page', (done) => {
+            api.get('/api-docs/')
+                .expect(200)
+                .end((err, res) => {
+                    if (err) throw err;
+                    expect(res.status).to.equal(200);
+                    done();
+                });
+        });
     });
 });
