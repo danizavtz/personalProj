@@ -37,7 +37,7 @@ describe('#Login', () => {
                     done();
                 });
         });
-        it('Check docs home page', (done) => {
+        it('Check docs home page 301 redirect', (done) => {
             api.get('/api-docs')
                 .expect(301)
                 .end((err, res) => {
