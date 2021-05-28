@@ -123,7 +123,7 @@ exports.generateURL = async (req, res) => {
             });
             corporate_response = await APIendpointInstanceDev.get(`insurance/claim/v1/claims/${req.params.id}/selfInspection`)
         } else if (req.query.ambiente && req.query.ambiente.toLowerCase() === 'hlg') {
-            APIendpointInstanceHml.interceptors.request.use((config) => {
+            APIendpointInstanceHlg.interceptors.request.use((config) => {
                 config.headers = config.headers || {};
                 config.headers.Authorization = `Bearer ${req.apicredential.token}`
                 return config;
